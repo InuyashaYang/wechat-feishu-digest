@@ -1,59 +1,60 @@
 """
-app_entry.py — PyInstaller 打包入口
-双击 .exe 时自动启动 UI 并打开浏览器
+app_entry.py - PyInstaller entry point
 """
-import io
+# --- Step 1: force UTF-8 BEFORE anything else touches stdout ---
 import os
 import sys
-import threading
-import webbrowser
-from pathlib import Path
 
-# ── Windows 控制台编码修正（GBK → UTF-8）────────────────────────────────────
-if sys.platform == "win32":
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+os.environ.setdefault("PYTHONUTF8", "1")
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except AttributeError:
+    import io
     if hasattr(sys.stdout, "buffer"):
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     if hasattr(sys.stderr, "buffer"):
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
-    os.system("chcp 65001 > nul 2>&1")   # 切换控制台代码页到 UTF-8
 
-# ── frozen 路径修正 ──────────────────────────────────────────────────────────
-# sys._MEIPASS = PyInstaller 解压的临时目录（只读，存放代码/静态文件）
-# EXE_DIR      = .exe 所在目录（可读写，存放 .env / output /）
+# --- Step 2: frozen path resolution ---
+import threading
+import webbrowser
+from pathlib import Path
 
-EXE_DIR   = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent
-MEIPASS   = Path(getattr(sys, "_MEIPASS", str(EXE_DIR)))
+EXE_DIR = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent
+MEIPASS = Path(getattr(sys, "_MEIPASS", str(EXE_DIR)))
 
-# 将 src/ 加入 import 路径
 sys.path.insert(0, str(MEIPASS / "src"))
 sys.path.insert(0, str(MEIPASS))
 
-# 修正工作目录（让 .env 写到 exe 旁边）
 os.chdir(str(EXE_DIR))
 
-# ── 启动 UI ──────────────────────────────────────────────────────────────────
+# --- Step 3: start UI ---
 PORT = 8765
+
 
 def _open_browser():
     import time
     time.sleep(1.2)
     webbrowser.open(f"http://localhost:{PORT}")
 
+
 if __name__ == "__main__":
-    # 设置 ui.py 所需的路径常量（覆盖模块级默认值）
     import ui as ui_module
     ui_module.BASE_DIR = EXE_DIR
     ui_module.ENV_FILE = EXE_DIR / ".env"
     ui_module.UI_DIR   = MEIPASS / "ui"
 
-    print(f"""
-  +===========================================+
-  |   AI WeChat Digest  /  AI 公众号周报     |
-  |   http://localhost:{PORT}                   |
-  |                                           |
-  |   关闭此窗口即可停止服务                 |
-  +===========================================+
-""", flush=True)
+    print("")
+    print("  +------------------------------------------+")
+    print("  |  AI WeChat Digest                        |")
+    print(f"  |  http://localhost:{PORT}                    |")
+    print("  |  Close this window to stop the server   |")
+    print("  +------------------------------------------+")
+    print("")
+    sys.stdout.flush()
 
     threading.Thread(target=_open_browser, daemon=True).start()
 
@@ -63,4 +64,4 @@ if __name__ == "__main__":
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n已停止")
+        print("Stopped.")
