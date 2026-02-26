@@ -59,15 +59,21 @@ def main():
     print(f"  账号: {', '.join(config.accounts)}")
     print(f"{'='*60}\n")
 
-    # ── 爬取 ────────────────────────────────────────────────────────────────
+    # ── 爬取（按分组） ───────────────────────────────────────────────────────
     articles_by_account = {}
-    for account in config.accounts:
-        query = config.search_query_template.format(account=account)
-        print(f"[{account}] 搜索: {query!r} ...", end=" ", flush=True)
-        all_arts = crawler.search(account, query, config.search_script_path, config.search_num)
-        recent   = crawler.filter_recent(all_arts, days)
-        articles_by_account[account] = recent
-        print(f"共 {len(all_arts)} 条 → 近{days}天 {len(recent)} 条")
+    for group in config.groups:
+        if not group.accounts:
+            continue
+        print(f"\n▶ {group.name}")
+        for account in group.accounts:
+            query = config.build_query(account, group.query_template)
+            print(f"  [{account}] {query!r} ...", end=" ", flush=True)
+            all_arts = crawler.search(
+                account, query, config.search_script_path, config.search_num,
+                group=group.name)
+            recent = crawler.filter_recent(all_arts, days)
+            articles_by_account[account] = recent
+            print(f"共 {len(all_arts)} 条 → 近{days}天 {len(recent)} 条")
 
     total = sum(len(v) for v in articles_by_account.values())
     print(f"\n合计: {total} 篇\n")

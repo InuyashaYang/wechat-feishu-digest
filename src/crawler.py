@@ -2,19 +2,19 @@
 import json
 import os
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
 class Article:
-    title: str
-    url: str
-    summary: str
-    datetime: str   # ISO 格式 "YYYY-MM-DD HH:MM:SS"
-    source: str
+    title:    str
+    url:      str
+    summary:  str
+    datetime: str      # "YYYY-MM-DD HH:MM:SS"
+    source:   str
+    group:    str = "" # 所属账号组名称（科技媒体 / 投资资讯 / …）
 
     @property
     def date(self) -> str:
@@ -22,15 +22,16 @@ class Article:
 
     def to_dict(self) -> dict:
         return {
-            "title": self.title,
-            "url": self.url,
-            "summary": self.summary,
+            "title":    self.title,
+            "url":      self.url,
+            "summary":  self.summary,
             "datetime": self.datetime,
-            "source": self.source,
+            "source":   self.source,
+            "group":    self.group,
         }
 
 
-def _parse_articles(raw: list) -> List[Article]:
+def _parse_articles(raw: list, group: str = "") -> List[Article]:
     result = []
     for item in raw:
         result.append(Article(
@@ -39,12 +40,19 @@ def _parse_articles(raw: list) -> List[Article]:
             summary  = item.get("summary", "").replace("\n", " ").strip(),
             datetime = item.get("datetime", ""),
             source   = item.get("source", ""),
+            group    = group,
         ))
     return result
 
 
-def search(account_name: str, query: str, script_path: str, num: int = 30) -> List[Article]:
-    """调用 Node.js 脚本搜索微信文章"""
+def search(
+    account_name: str,
+    query: str,
+    script_path: str,
+    num: int = 30,
+    group: str = "",
+) -> List[Article]:
+    """调用 Node.js 脚本搜索微信文章，按日期倒序返回"""
     if not os.path.exists(script_path):
         print(f"  ⚠ 搜索脚本不存在: {script_path}")
         return []
@@ -61,8 +69,9 @@ def search(account_name: str, query: str, script_path: str, num: int = 30) -> Li
         with open(tmp_out, encoding="utf-8") as f:
             data = json.load(f)
         raw = data.get("articles", data if isinstance(data, list) else [])
-        articles = _parse_articles(raw)
-        articles.sort(key=lambda a: a.datetime, reverse=True)
+        articles = _parse_articles(raw, group)
+        # 严格按发布时间倒序（最新在前）
+        articles.sort(key=lambda a: a.datetime or "0000-00-00", reverse=True)
         return articles
     except subprocess.TimeoutExpired:
         print(f"  ⚠ 搜索超时 [{account_name}]")
@@ -73,5 +82,14 @@ def search(account_name: str, query: str, script_path: str, num: int = 30) -> Li
 
 
 def filter_recent(articles: List[Article], days: int) -> List[Article]:
+    """只保留最近 days 天的文章，并去重（同标题只取最新一条）"""
     cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
-    return [a for a in articles if a.date >= cutoff]
+    recent = [a for a in articles if a.date >= cutoff]
+
+    # 去重：同标题只保留时间最新的一条
+    seen: dict[str, Article] = {}
+    for a in recent:
+        key = a.title.strip()
+        if key not in seen or a.datetime > seen[key].datetime:
+            seen[key] = a
+    return list(seen.values())

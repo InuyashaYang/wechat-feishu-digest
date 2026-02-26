@@ -48,17 +48,24 @@ def output(
             "",
         ]
 
-    # 各账号文章
+    # 各账号文章（按 group 分组）
+    by_group: dict = {}
     for account, articles in articles_by_account.items():
-        md_lines += [f"## {account}（{len(articles)} 篇）", ""]
-        for a in articles:
-            if a.url:
-                md_lines.append(f"- [{a.date}] [{a.title}]({a.url})")
-            else:
-                md_lines.append(f"- [{a.date}] {a.title}")
-            if a.summary:
-                md_lines.append(f"  > {a.summary[:100]}")
-        md_lines.append("")
+        g = articles[0].group if articles else "其他"
+        by_group.setdefault(g, {})[account] = articles
+
+    for group_name, group_accounts in by_group.items():
+        md_lines += [f"## 📂 {group_name}", ""]
+        for account, articles in group_accounts.items():
+            md_lines += [f"### {account}（{len(articles)} 篇）", ""]
+            for a in articles:
+                if a.url:
+                    md_lines.append(f"- [{a.date}] [{a.title}]({a.url})")
+                else:
+                    md_lines.append(f"- [{a.date}] {a.title}")
+                if a.summary:
+                    md_lines.append(f"  > {a.summary[:100]}")
+            md_lines.append("")
 
     md_path.write_text("\n".join(md_lines), encoding="utf-8")
     print(f"  ✓ Markdown: {md_path}")

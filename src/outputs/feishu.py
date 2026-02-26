@@ -134,16 +134,27 @@ def output(
             else:
                 blocks.append(_text_block(line))
 
-    # 各账号文章
+    # 各账号文章（按 group 分组显示）
+    by_group: dict = {}
     for account, articles in articles_by_account.items():
-        blocks.append(_heading2_block(f"{account}（{len(articles)}篇）"))
-        for a in articles:
-            elems = [_text_elem(f"[{a.date}]  ")]
-            if a.url:
-                elems.append(_text_elem(a.title, link=a.url))
-            else:
-                elems.append(_text_elem(a.title, bold=True))
-            blocks.append(_bullet_block(elems))
+        g = articles[0].group if articles else "其他"
+        by_group.setdefault(g, {})[account] = articles
+
+    for group_name, group_accounts in by_group.items():
+        # 分组标题
+        blocks.append({
+            "block_type": 3,
+            "heading1": {"elements": [_text_elem(f"📂 {group_name}")], "style": {"align": 1}},
+        })
+        for account, articles in group_accounts.items():
+            blocks.append(_heading2_block(f"{account}（{len(articles)}篇）"))
+            for a in articles:
+                elems = [_text_elem(f"[{a.date}]  ")]
+                if a.url:
+                    elems.append(_text_elem(a.title, link=a.url))
+                else:
+                    elems.append(_text_elem(a.title, bold=True))
+                blocks.append(_bullet_block(elems))
 
     # 分批写入（单次最多 40 块）
     chunk_size = 40
