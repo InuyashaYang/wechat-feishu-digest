@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""生成可爱的 wechat-digest 应用图标"""
+"""Generate cute icon for wechat-feishu-digest app."""
 import math
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
@@ -154,7 +154,7 @@ def generate_ico(out_path: Path):
         format="ICO",
         sizes=[(256, 256), (128, 128), (64, 64), (48, 48), (32, 32), (16, 16)],
     )
-    print(f"  ✓ 图标已生成：{out_path}  ({out_path.stat().st_size // 1024} KB)")
+    print(f"  icon generated: {out_path}  ({out_path.stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":

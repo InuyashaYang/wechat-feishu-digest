@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write           # 允许创建/更新 Release
 
+env:
+  PYTHONUTF8: "1"           # 所有 Python 步骤强制 UTF-8 输出
+  PYTHONIOENCODING: "utf-8"
+
 jobs:
   build:
     name: Build on Windows
