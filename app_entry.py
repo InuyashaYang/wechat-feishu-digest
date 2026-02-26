@@ -2,11 +2,20 @@
 app_entry.py — PyInstaller 打包入口
 双击 .exe 时自动启动 UI 并打开浏览器
 """
+import io
 import os
 import sys
 import threading
 import webbrowser
 from pathlib import Path
+
+# ── Windows 控制台编码修正（GBK → UTF-8）────────────────────────────────────
+if sys.platform == "win32":
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "buffer"):
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+    os.system("chcp 65001 > nul 2>&1")   # 切换控制台代码页到 UTF-8
 
 # ── frozen 路径修正 ──────────────────────────────────────────────────────────
 # sys._MEIPASS = PyInstaller 解压的临时目录（只读，存放代码/静态文件）
@@ -38,13 +47,13 @@ if __name__ == "__main__":
     ui_module.UI_DIR   = MEIPASS / "ui"
 
     print(f"""
-  ┌──────────────────────────────────────────┐
-  │  🗞  AI 公众号周报                       │
-  │      http://localhost:{PORT}               │
-  │                                          │
-  │  关闭此窗口即可停止服务                  │
-  └──────────────────────────────────────────┘
-""")
+  +===========================================+
+  |   AI WeChat Digest  /  AI 公众号周报     |
+  |   http://localhost:{PORT}                   |
+  |                                           |
+  |   关闭此窗口即可停止服务                 |
+  +===========================================+
+""", flush=True)
 
     threading.Thread(target=_open_browser, daemon=True).start()
 
