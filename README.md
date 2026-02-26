@@ -124,3 +124,42 @@ wechat-feishu-digest/
 ## 📄 License
 
 [MIT](LICENSE)
+
+---
+
+## 🖥 Web UI
+
+```bash
+bash run.sh --ui        # 启动 UI：http://localhost:8765
+bash run.sh --ui --port 9000
+```
+
+界面功能：
+- 账号/关键词可视化编辑（三组独立配置）
+- OpenRouter API Key 输入（带显示/隐藏）
+- 本地输出目录、飞书配置
+- 一键运行 + 实时日志流
+
+---
+
+## 📦 打包为 .exe（Windows）
+
+> 依赖：Python 3.8+、Node.js（均需加入 PATH）
+
+```powershell
+# 在项目根目录运行（PowerShell）
+.\build\build.ps1
+
+# 或者双击 build\build.bat
+```
+
+打包完成后：
+
+```
+dist/
+  wechat-digest.exe   ← 双击运行，浏览器自动打开 UI
+  .env.example        ← 首次使用复制为 .env 并填写配置
+```
+
+- 首次运行会在 `wechat-digest.exe` 旁边创建 `.env` 和 `output/` 目录
+- 如果系统无 Node.js，脚本会自动下载便携版 `node.exe`（约 40MB）并打包进去

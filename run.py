@@ -19,8 +19,9 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# 把 src 加入路径（让 run.py 在项目根目录直接运行）
-sys.path.insert(0, str(Path(__file__).parent))
+# 把 src 加入路径（兼容直接运行 & PyInstaller frozen 模式）
+_root = Path(getattr(sys, "_MEIPASS", str(Path(__file__).parent)))
+sys.path.insert(0, str(_root))
 
 from src.config import Config
 from src import crawler, summarizer

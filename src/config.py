@@ -1,5 +1,5 @@
-"""配置加载：从 .env 文件或环境变量读取"""
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -86,9 +86,13 @@ class Config:
         # 所有账号的扁平列表（便于汇总统计）
         self.accounts = [a for g in self.groups for a in g.accounts]
 
-        # Node.js 搜索脚本路径
-        default_script = str(
-            Path(__file__).parent.parent / "wechat_search" / "scripts" / "search_wechat.js")
+        # Node.js 搜索脚本路径（frozen 模式从 _MEIPASS 找）
+        def _assets_dir():
+            if getattr(sys, "frozen", False):
+                return Path(getattr(sys, "_MEIPASS", str(Path(__file__).parent)))
+            return Path(__file__).parent.parent
+
+        default_script = str(_assets_dir() / "wechat_search" / "scripts" / "search_wechat.js")
         self.search_script_path = get("SEARCH_SCRIPT_PATH", default_script)
 
     def build_query(self, account: str, template: str) -> str:

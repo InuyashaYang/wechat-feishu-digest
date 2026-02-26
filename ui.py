@@ -20,9 +20,19 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-BASE_DIR = Path(__file__).parent
+def _frozen_base() -> Path:
+    """打包后 .exe 所在目录（可读写）；开发时为项目根目录"""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+    return Path(__file__).parent
+
+def _frozen_assets() -> Path:
+    """打包后静态资源解压目录（只读）；开发时同上"""
+    return Path(getattr(sys, "_MEIPASS", str(Path(__file__).parent)))
+
+BASE_DIR = _frozen_base()
 ENV_FILE = BASE_DIR / ".env"
-UI_DIR   = BASE_DIR / "ui"
+UI_DIR   = _frozen_assets() / "ui"
 
 
 # ─── .env 读写 ────────────────────────────────────────────────────────────────
@@ -77,7 +87,9 @@ is_running = False
 
 def _do_run(extra_args: list):
     global is_running
-    cmd = [sys.executable, str(BASE_DIR / "run.py")] + extra_args
+    # frozen 模式下 run.py 在 _MEIPASS（静态资源目录）
+    run_script = _frozen_assets() / "run.py"
+    cmd = [sys.executable, str(run_script)] + extra_args
     try:
         proc = subprocess.Popen(
             cmd,
