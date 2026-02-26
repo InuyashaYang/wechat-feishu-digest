@@ -5,632 +5,496 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 公众号周报</title>
 <style>
-  :root {
-    --bg: #0f1117;
-    --bg2: #161b22;
-    --bg3: #21262d;
-    --border: #30363d;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --accent: #58a6ff;
-    --green: #3fb950;
-    --yellow: #d29922;
-    --red: #f85149;
-    --purple: #bc8cff;
-    --radius: 8px;
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px;
-  }
-  .container { max-width: 860px; margin: 0 auto; }
+:root{--bg:#0f1117;--bg2:#161b22;--bg3:#21262d;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--red:#f85149;--purple:#bc8cff;--r:8px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px}
+.container{max-width:880px;margin:0 auto}
+/* Header */
+.hdr{margin-bottom:24px}
+.hdr h1{font-size:22px;font-weight:600;display:flex;align-items:center;gap:10px}
+.hdr h1 .badge{font-size:11px;padding:2px 8px;border-radius:12px;background:var(--bg3);color:var(--muted);font-weight:400;border:1px solid var(--border)}
+.hdr p{color:var(--muted);margin-top:6px;font-size:13px}
+/* Card */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+/* Form */
+.field{margin-bottom:14px}.field:last-child{margin-bottom:0}
+label{display:block;font-size:13px;color:var(--text);margin-bottom:6px;font-weight:500}
+label .hint{font-weight:400;color:var(--muted);margin-left:6px;font-size:12px}
+input[type=text],input[type=password],input[type=number],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:8px 12px;font-family:var(--font);outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--accent)}
+input[type=number]{width:100px}
+.mono{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px}
+.grp{border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:12px}
+.grp:last-child{margin-bottom:0}
+.grp-lbl{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.grp-lbl .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.row{display:flex;gap:12px}.row .field{flex:1}.row .field.n{flex:0 0 120px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text);transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2d333b;border-color:#8b949e}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#0d1117;font-weight:600}.btn.p:hover{background:#79c0ff}
+.btn-grp{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.iw{position:relative}.iw input{padding-right:36px}
+.eyebtn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px;padding:0}
+.run-opts{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+.run-opts label{margin:0;display:flex;align-items:center;gap:6px;cursor:pointer}
+.run-opts input[type=checkbox]{width:auto;accent-color:var(--accent)}
+.run-opts select{width:auto}
 
-  /* Header */
-  .header { margin-bottom: 28px; }
-  .header h1 {
-    font-size: 22px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .header h1 .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    background: var(--bg3);
-    color: var(--muted);
-    font-weight: 400;
-    border: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .header p { color: var(--muted); margin-top: 6px; font-size: 13px; }
-
-  /* Cards */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* Form elements */
-  .field { margin-bottom: 14px; }
-  .field:last-child { margin-bottom: 0; }
-  label {
-    display: block;
-    font-size: 13px;
-    color: var(--text);
-    margin-bottom: 6px;
-    font-weight: 500;
-  }
-  label span.hint {
-    font-weight: 400;
-    color: var(--muted);
-    margin-left: 6px;
-    font-size: 12px;
-  }
-  input[type=text], input[type=password], input[type=number], select {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-size: 13px;
-    padding: 8px 12px;
-    font-family: var(--font);
-    outline: none;
-    transition: border-color .15s;
-  }
-  input[type=text]:focus, input[type=password]:focus,
-  input[type=number]:focus, select:focus {
-    border-color: var(--accent);
-  }
-  input[type=number] { width: 100px; }
-  .mono { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
-
-  /* Group block */
-  .group-block {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px;
-    margin-bottom: 12px;
-    position: relative;
-  }
-  .group-block:last-child { margin-bottom: 0; }
-  .group-label {
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .group-label .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  /* Row layout */
-  .row { display: flex; gap: 12px; }
-  .row .field { flex: 1; }
-  .row .field.narrow { flex: 0 0 120px; }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--bg3);
-    color: var(--text);
-    transition: all .15s;
-    font-family: var(--font);
-  }
-  .btn:hover { background: #2d333b; border-color: #8b949e; }
-  .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #0d1117;
-    font-weight: 600;
-  }
-  .btn.primary:hover { background: #79c0ff; border-color: #79c0ff; }
-  .btn.success {
-    background: var(--green);
-    border-color: var(--green);
-    color: #0d1117;
-    font-weight: 600;
-  }
-  .btn.danger { color: var(--red); border-color: var(--red); }
-  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-  /* Status pill */
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  .pill.idle    { background: #21262d; color: var(--muted); }
-  .pill.running { background: #1f2d3d; color: var(--accent); }
-  .pill.done    { background: #122320; color: var(--green); }
-  .pill.error   { background: #2d1117; color: var(--red); }
-  .pill .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .pill.running .dot { animation: blink 1s infinite; }
-  @keyframes blink { 50% { opacity: .2; } }
-
-  /* Log panel */
-  #log-panel {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: "SFMono-Regular", Consolas, monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    padding: 14px 16px;
-    height: 280px;
-    overflow-y: auto;
-    color: #c9d1d9;
-    margin-top: 12px;
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-  #log-panel .log-line { margin: 1px 0; }
-  #log-panel .log-ok    { color: var(--green); }
-  #log-panel .log-warn  { color: var(--yellow); }
-  #log-panel .log-err   { color: var(--red); }
-  #log-panel .log-head  { color: var(--accent); font-weight: bold; }
-  #log-panel .log-group { color: var(--purple); }
-  #log-panel .log-done  { color: var(--green); font-weight: bold; }
-  #log-panel .empty-hint {
-    color: var(--muted);
-    font-style: italic;
-    text-align: center;
-    margin-top: 100px;
-  }
-
-  /* Save toast */
-  #toast {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: all .2s;
-    pointer-events: none;
-    z-index: 999;
-  }
-  #toast.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  #toast.ok  { background: #122320; color: var(--green); border: 1px solid var(--green); }
-  #toast.err { background: #2d1117; color: var(--red);   border: 1px solid var(--red); }
-
-  /* Eye toggle for password */
-  .input-wrap { position: relative; }
-  .input-wrap input { padding-right: 36px; }
-  .eye-btn {
-    position: absolute; right: 10px; top: 50%;
-    transform: translateY(-50%);
-    background: none; border: none; cursor: pointer;
-    color: var(--muted); font-size: 15px; padding: 0;
-    line-height: 1;
-  }
-  .eye-btn:hover { color: var(--text); }
-
-  /* Run options */
-  .run-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .run-options label { margin: 0; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-  .run-options input[type=checkbox] { width: auto; accent-color: var(--accent); }
-  .run-options select { width: auto; }
-  .sep { color: var(--border); }
-
-  /* Result link */
-  #result-link {
-    margin-top: 10px;
-    font-size: 13px;
-    display: none;
-  }
-  #result-link a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  #result-link a:hover { text-decoration: underline; }
+/* ===== PROGRESS ===== */
+#progress{display:none;margin-top:18px;border-top:1px solid var(--border);padding-top:16px}
+#progress.on{display:block}
+/* Steps */
+.steps{display:flex;align-items:flex-start;margin-bottom:16px}
+.step{display:flex;align-items:flex-start;gap:8px;flex:1}
+.sdot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);background:var(--bg3);flex-shrink:0;transition:all .3s}
+.sdot.active{border-color:var(--accent);color:var(--accent);background:#1f2d3d}
+.sdot.done{border-color:var(--green);background:#122320;color:var(--green)}
+.slbl{font-size:12px;color:var(--muted)}.slbl.active{color:var(--text);font-weight:600}.slbl.done{color:var(--green)}
+.ssub{font-size:10px;color:var(--muted);margin-top:1px}.ssub.active{color:var(--accent)}
+.sline{flex:1;height:2px;background:var(--border);margin:13px 6px 0;transition:background .4s}.sline.done{background:var(--green)}
+/* Progress bar */
+.pbar{margin-bottom:14px}
+.pbar-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.pbar-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.pbar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.pbar-fill.shimmer::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);animation:shimmer 1.4s infinite}
+@keyframes shimmer{0%{transform:translateX(-200%)}100%{transform:translateX(200%)}}
+/* Account grid */
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.ac{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center;transition:border-color .25s,box-shadow .25s}
+.ac.running{border-color:var(--accent);box-shadow:0 0 8px rgba(88,166,255,.15)}
+.ac.done{border-color:var(--green)}
+.ac-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);margin-bottom:3px}
+.ac.running .ac-name,.ac.done .ac-name{color:var(--text)}
+.ac-num{font-size:22px;font-weight:700;color:var(--border);line-height:1.2}
+.ac.done .ac-num{color:var(--text)}
+.ac-unit{font-size:10px;color:var(--muted);margin-bottom:4px}
+.abadge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:10px}
+.ab-wait{background:var(--bg);color:var(--muted)}
+.ab-run{background:#1f2d3d;color:var(--accent);animation:pulse .9s infinite}
+.ab-ok{background:#122320;color:var(--green)}
+.ab-zero{background:#2d1117;color:var(--red)}
+@keyframes pulse{50%{opacity:.4}}
+/* Summary */
+.sumrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.si{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;flex:1;min-width:90px;text-align:center}
+.si-val{font-size:24px;font-weight:700;line-height:1.1}
+.si-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Log */
+.ltoggle{font-size:12px;color:var(--muted);cursor:pointer;user-select:none;display:flex;align-items:center;gap:5px;padding:4px 0}
+.ltoggle:hover{color:var(--text)}
+.larr{transition:transform .2s;display:inline-block}.larr.open{transform:rotate(90deg)}
+#logpanel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);font-family:"SFMono-Regular",Consolas,monospace;font-size:11.5px;line-height:1.6;padding:12px 14px;height:200px;overflow-y:auto;color:#c9d1d9;white-space:pre-wrap;word-break:break-all;margin-top:6px;display:none}
+.lok{color:var(--green)}.lwarn{color:var(--yellow)}.lgrp{color:var(--purple);font-weight:bold}.ldone{color:var(--green);font-weight:bold}.lhead{color:var(--accent)}
+#reslink{margin-top:10px;font-size:13px;display:none}
+#reslink a{color:var(--accent);text-decoration:none;font-weight:500}
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:999}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.ok{background:#122320;color:var(--green);border:1px solid var(--green)}
+#toast.err{background:#2d1117;color:var(--red);border:1px solid var(--red)}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <h1>🗞 AI 公众号周报 <span class="badge">wechat-feishu-digest</span></h1>
-    <p>配置关键词 · 设置 API Key · 一键运行 · 输出到飞书或本地</p>
-  </div>
-
-  <!-- 账号配置 -->
-  <div class="card">
-    <div class="card-title">📰 账号 & 关键词</div>
-
-    <div class="group-block">
-      <div class="group-label"><span class="dot"></span> 科技媒体</div>
-      <div class="field">
-        <label>账号列表 <span class="hint">逗号分隔</span></label>
-        <input id="accounts" type="text" class="mono"
-               placeholder="机器之心,新智元,量子位">
-      </div>
-      <div class="field">
-        <label>搜索词模板 <span class="hint">{account} {year} {month} 会自动替换</span></label>
-        <input id="search_query_template" type="text" class="mono"
-               placeholder="{account} AI 大模型 {year}年{month}月">
-      </div>
-    </div>
-
-    <div class="group-block">
-      <div class="group-label" style="color: var(--yellow)"><span class="dot"></span> 投资资讯</div>
-      <div class="field">
-        <label>账号列表 <span class="hint">逗号分隔</span></label>
-        <input id="invest_accounts" type="text" class="mono"
-               placeholder="36氪,钛媒体,晚点,硅星人">
-      </div>
-      <div class="field">
-        <label>搜索词模板</label>
-        <input id="invest_query_template" type="text" class="mono"
-               placeholder="{account} AI 融资 大模型 {year}年{month}月">
-      </div>
-    </div>
-
-    <div class="group-block">
-      <div class="group-label" style="color: var(--purple)"><span class="dot"></span> 自定义（可选）</div>
-      <div class="field">
-        <label>账号列表 <span class="hint">留空则跳过</span></label>
-        <input id="extra_accounts" type="text" class="mono" placeholder="">
-      </div>
-      <div class="field">
-        <label>搜索词模板</label>
-        <input id="extra_query_template" type="text" class="mono" placeholder="">
-      </div>
-    </div>
-  </div>
-
-  <!-- AI & 输出配置 -->
-  <div class="card">
-    <div class="card-title">⚙️ API & 输出配置</div>
-
-    <div class="row">
-      <div class="field">
-        <label>🤖 OpenRouter API Key</label>
-        <div class="input-wrap">
-          <input id="openrouter_api_key" type="password" class="mono"
-                 placeholder="sk-or-v1-...">
-          <button class="eye-btn" onclick="toggleEye('openrouter_api_key', this)">👁</button>
-        </div>
-      </div>
-      <div class="field" style="flex: 0 0 280px">
-        <label>模型 <span class="hint">免费额度推荐</span></label>
-        <select id="openrouter_model">
-          <option value="stepfun/step-3.5-flash:free">stepfun/step-3.5-flash:free ⭐</option>
-          <option value="google/gemini-2.0-flash-lite:free">gemini-2.0-flash-lite:free</option>
-          <option value="google/gemini-2.5-flash:free">gemini-2.5-flash:free</option>
-          <option value="qwen/qwen3.5-flash-02-23">qwen/qwen3.5-flash-02-23</option>
-          <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
-          <option value="custom">自定义...</option>
-        </select>
-        <input id="openrouter_model_custom" type="text" class="mono"
-               style="margin-top:6px; display:none"
-               placeholder="输入模型 ID">
-      </div>
-    </div>
-
-    <div class="row" style="margin-top: 14px">
-      <div class="field">
-        <label>📁 本地输出目录</label>
-        <input id="local_output_dir" type="text" class="mono"
-               placeholder="./output">
-      </div>
-      <div class="field narrow">
-        <label>爬取天数</label>
-        <input id="search_days" type="number" min="1" max="30" value="7">
-      </div>
-      <div class="field narrow">
-        <label>每组条数</label>
-        <input id="search_num" type="number" min="5" max="50" value="30">
-      </div>
-    </div>
-
-    <!-- 飞书（可折叠） -->
-    <details style="margin-top: 14px">
-      <summary style="font-size:13px; color: var(--muted); cursor:pointer; user-select:none">
-        🪶 飞书配置（选填）
-      </summary>
-      <div style="margin-top: 12px">
-        <div class="row">
-          <div class="field">
-            <label>App ID</label>
-            <input id="feishu_app_id" type="text" class="mono" placeholder="cli_xxx">
-          </div>
-          <div class="field">
-            <label>App Secret</label>
-            <div class="input-wrap">
-              <input id="feishu_app_secret" type="password" class="mono" placeholder="">
-              <button class="eye-btn" onclick="toggleEye('feishu_app_secret', this)">👁</button>
-            </div>
-          </div>
-        </div>
-        <div class="field" style="margin-top: 10px">
-          <label>共享给（Open ID，可选）</label>
-          <input id="feishu_share_openid" type="text" class="mono" placeholder="ou_xxx">
-        </div>
-      </div>
-    </details>
-  </div>
-
-  <!-- 运行面板 -->
-  <div class="card">
-    <div class="card-title">▶ 运行</div>
-
-    <div class="run-options">
-      <span>输出到：</span>
-      <select id="run_output" style="width: auto">
-        <option value="auto">自动（根据配置）</option>
-        <option value="local">仅本地</option>
-        <option value="feishu">仅飞书</option>
-        <option value="both">飞书 + 本地</option>
-      </select>
-      <span class="sep">|</span>
-      <label><input type="checkbox" id="run_no_ai"> 跳过 AI 摘要</label>
-      <label><input type="checkbox" id="run_dry_run"> 预览模式（不写出）</label>
-    </div>
-
-    <div class="btn-group">
-      <button class="btn" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn primary" id="run-btn" onclick="runCrawl()">▶ 一键运行</button>
-      <span id="status-pill" class="pill idle">
-        <span class="dot"></span> 待运行
-      </span>
-    </div>
-
-    <div id="log-panel"><div class="empty-hint">运行后日志显示在这里...</div></div>
-    <div id="result-link"></div>
-  </div>
-
+<div class="hdr">
+  <h1>🗞 AI 公众号周报 <span class="badge">wechat-feishu-digest</span></h1>
+  <p>配置关键词 · 设置 API Key · 一键运行 · 输出到飞书或本地</p>
 </div>
 
-<!-- Toast -->
+<!-- 账号配置 -->
+<div class="card">
+  <div class="card-title">📰 账号 &amp; 关键词</div>
+  <div class="grp">
+    <div class="grp-lbl"><span class="dot"></span> 科技媒体</div>
+    <div class="field"><label>账号列表 <span class="hint">逗号分隔</span></label><input id="accounts" type="text" class="mono" placeholder="机器之心,新智元,量子位"></div>
+    <div class="field"><label>搜索词模板 <span class="hint">{account} {year} {month} 自动替换</span></label><input id="search_query_template" type="text" class="mono" placeholder="{account} AI 大模型 {year}年{month}月"></div>
+  </div>
+  <div class="grp">
+    <div class="grp-lbl" style="color:var(--yellow)"><span class="dot"></span> 投资资讯</div>
+    <div class="field"><label>账号列表</label><input id="invest_accounts" type="text" class="mono" placeholder="36氪,钛媒体,晚点,硅星人"></div>
+    <div class="field"><label>搜索词模板</label><input id="invest_query_template" type="text" class="mono" placeholder="{account} AI 融资 大模型 {year}年{month}月"></div>
+  </div>
+  <div class="grp">
+    <div class="grp-lbl" style="color:var(--purple)"><span class="dot"></span> 自定义（可选）</div>
+    <div class="field"><label>账号列表 <span class="hint">留空则跳过</span></label><input id="extra_accounts" type="text" class="mono"></div>
+    <div class="field"><label>搜索词模板</label><input id="extra_query_template" type="text" class="mono"></div>
+  </div>
+</div>
+
+<!-- API & 输出 -->
+<div class="card">
+  <div class="card-title">⚙️ API &amp; 输出配置</div>
+  <div class="row">
+    <div class="field">
+      <label>🤖 OpenRouter API Key</label>
+      <div class="iw"><input id="openrouter_api_key" type="password" class="mono" placeholder="sk-or-v1-..."><button class="eyebtn" onclick="toggleEye('openrouter_api_key',this)">👁</button></div>
+    </div>
+    <div class="field" style="flex:0 0 280px">
+      <label>模型 <span class="hint">免费额度推荐</span></label>
+      <select id="openrouter_model">
+        <option value="stepfun/step-3.5-flash:free">stepfun/step-3.5-flash:free ⭐</option>
+        <option value="google/gemini-2.0-flash-lite:free">gemini-2.0-flash-lite:free</option>
+        <option value="google/gemini-2.5-flash:free">gemini-2.5-flash:free</option>
+        <option value="qwen/qwen3.5-flash-02-23">qwen/qwen3.5-flash-02-23</option>
+        <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
+        <option value="custom">自定义...</option>
+      </select>
+      <input id="openrouter_model_custom" type="text" class="mono" style="margin-top:6px;display:none" placeholder="输入模型 ID">
+    </div>
+  </div>
+  <div class="row" style="margin-top:14px">
+    <div class="field"><label>📁 本地输出目录</label><input id="local_output_dir" type="text" class="mono" placeholder="./output"></div>
+    <div class="field n"><label>爬取天数</label><input id="search_days" type="number" min="1" max="30" value="7"></div>
+    <div class="field n"><label>每组条数</label><input id="search_num" type="number" min="5" max="50" value="30"></div>
+  </div>
+  <details style="margin-top:14px">
+    <summary style="font-size:13px;color:var(--muted);cursor:pointer;user-select:none">🪶 飞书配置（选填）</summary>
+    <div style="margin-top:12px">
+      <div class="row">
+        <div class="field"><label>App ID</label><input id="feishu_app_id" type="text" class="mono" placeholder="cli_xxx"></div>
+        <div class="field"><label>App Secret</label><div class="iw"><input id="feishu_app_secret" type="password" class="mono"><button class="eyebtn" onclick="toggleEye('feishu_app_secret',this)">👁</button></div></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>共享给（Open ID，可选）</label><input id="feishu_share_openid" type="text" class="mono" placeholder="ou_xxx"></div>
+    </div>
+  </details>
+</div>
+
+<!-- 运行面板 -->
+<div class="card">
+  <div class="card-title">▶ 运行</div>
+  <div class="run-opts">
+    <span>输出到：</span>
+    <select id="run_output" style="width:auto">
+      <option value="auto">自动（根据配置）</option>
+      <option value="local">仅本地</option>
+      <option value="feishu">仅飞书</option>
+      <option value="both">飞书 + 本地</option>
+    </select>
+    <span style="color:var(--border)">|</span>
+    <label><input type="checkbox" id="run_no_ai"> 跳过 AI 摘要</label>
+    <label><input type="checkbox" id="run_dry_run"> 预览模式</label>
+  </div>
+  <div class="btn-grp">
+    <button class="btn" onclick="saveConfig()">💾 保存配置</button>
+    <button class="btn p" id="run-btn" onclick="runCrawl()">▶ 一键运行</button>
+  </div>
+
+  <!-- ===== 进度面板 ===== -->
+  <div id="progress">
+
+    <!-- Step bar -->
+    <div class="steps">
+      <div class="step">
+        <div class="sdot" id="sd0">1</div>
+        <div><div class="slbl" id="sl0">爬取文章</div><div class="ssub" id="ss0"></div></div>
+      </div>
+      <div class="sline" id="sln0"></div>
+      <div class="step">
+        <div class="sdot" id="sd1">2</div>
+        <div><div class="slbl" id="sl1">AI 摘要</div><div class="ssub" id="ss1"></div></div>
+      </div>
+      <div class="sline" id="sln1"></div>
+      <div class="step">
+        <div class="sdot" id="sd2">3</div>
+        <div><div class="slbl" id="sl2">写出结果</div><div class="ssub" id="ss2"></div></div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="pbar">
+      <div class="pbar-top"><span id="pbar-txt">准备中...</span><span id="pbar-pct">0%</span></div>
+      <div class="pbar-track"><div class="pbar-fill shimmer" id="pbar-fill"></div></div>
+    </div>
+
+    <!-- Account cards -->
+    <div class="ag" id="ag"></div>
+
+    <!-- Summary -->
+    <div class="sumrow" id="sumrow" style="display:none">
+      <div class="si"><div class="si-val" id="sv-tot" style="color:var(--accent)">0</div><div class="si-lbl">总文章数</div></div>
+      <div class="si"><div class="si-val" id="sv-acc" style="color:var(--purple)">0</div><div class="si-lbl">已爬账号</div></div>
+      <div class="si" id="si-fs" style="display:none"><div class="si-val" style="color:var(--green)">✓</div><div class="si-lbl">飞书已写</div></div>
+      <div class="si" id="si-lc" style="display:none"><div class="si-val" style="color:var(--green)">✓</div><div class="si-lbl">本地已写</div></div>
+    </div>
+
+    <!-- Log collapsible -->
+    <div class="ltoggle" onclick="toggleLog()"><span class="larr" id="larr">▶</span> 详细日志</div>
+    <div id="logpanel"></div>
+  </div>
+
+  <div id="reslink"></div>
+</div>
+
+</div><!-- container -->
 <div id="toast"></div>
 
 <script>
 const API = '';
 
-// ─── 加载配置 ────────────────────────────────────────────────────────────────
-async function loadConfig() {
-  try {
-    const r = await fetch(API + '/api/config');
-    const cfg = await r.json();
-    const ids = ['accounts','search_query_template','invest_accounts',
-                 'invest_query_template','extra_accounts','extra_query_template',
-                 'openrouter_api_key','local_output_dir','feishu_app_id',
-                 'feishu_app_secret','feishu_share_openid','search_days','search_num'];
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && cfg[id] !== undefined) el.value = cfg[id];
-    });
-    // 模型选择
-    const modelSel = document.getElementById('openrouter_model');
-    const modelVal = cfg.openrouter_model || '';
-    const found = [...modelSel.options].some(o => o.value === modelVal);
-    if (found) {
-      modelSel.value = modelVal;
-    } else if (modelVal) {
-      modelSel.value = 'custom';
-      const customEl = document.getElementById('openrouter_model_custom');
-      customEl.style.display = 'block';
-      customEl.value = modelVal;
-    }
-  } catch(e) {
-    console.error('加载配置失败', e);
-  }
-}
+// ─── State ────────────────────────────────────────────────────────────────────
+let acctList = [], acctMap = {}, doneCnt = 0, totalCnt = 0, curAcct = null;
+let logOpen = false;
 
-document.getElementById('openrouter_model').addEventListener('change', function() {
-  const custom = document.getElementById('openrouter_model_custom');
-  custom.style.display = this.value === 'custom' ? 'block' : 'none';
-});
+function eid(n){ return 'ac_' + n.replace(/[^a-zA-Z0-9]/g,'_'); }
 
-function getModelValue() {
-  const sel = document.getElementById('openrouter_model');
-  if (sel.value === 'custom') {
-    return document.getElementById('openrouter_model_custom').value.trim();
-  }
-  return sel.value;
-}
-
-// ─── 保存配置 ────────────────────────────────────────────────────────────────
-async function saveConfig() {
-  const ids = ['accounts','search_query_template','invest_accounts',
-               'invest_query_template','extra_accounts','extra_query_template',
-               'openrouter_api_key','local_output_dir','feishu_app_id',
-               'feishu_app_secret','feishu_share_openid','search_days','search_num'];
-  const data = {};
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) data[id] = el.value.trim();
+// ─── Build account grid from config values ────────────────────────────────────
+function buildGrid() {
+  const all = [
+    ...(document.getElementById('accounts').value.split(',').map(s=>s.trim()).filter(Boolean)),
+    ...(document.getElementById('invest_accounts').value.split(',').map(s=>s.trim()).filter(Boolean)),
+    ...(document.getElementById('extra_accounts').value.split(',').map(s=>s.trim()).filter(Boolean)),
+  ];
+  acctList = all; totalCnt = all.length; doneCnt = 0; acctMap = {};
+  const grid = document.getElementById('ag'); grid.innerHTML = '';
+  all.forEach(name => {
+    acctMap[name] = { status:'pending', recent:0, total:0 };
+    const d = document.createElement('div');
+    d.className = 'ac'; d.id = eid(name);
+    d.innerHTML = `<div class="ac-name" title="${name}">${name}</div>
+      <div class="ac-num" id="${eid(name)}_n">-</div>
+      <div class="ac-unit">篇</div>
+      <div><span class="abadge ab-wait" id="${eid(name)}_b">等待</span></div>`;
+    grid.appendChild(d);
   });
-  data['openrouter_model'] = getModelValue();
+}
 
-  try {
-    const r = await fetch(API + '/api/config', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data),
-    });
-    const res = await r.json();
-    if (res.ok) showToast('✓ 配置已保存', 'ok');
-    else showToast('保存失败: ' + (res.error||''), 'err');
-  } catch(e) {
-    showToast('保存失败: ' + e.message, 'err');
+function acctRunning(name) {
+  if (!acctMap[name]) return;
+  acctMap[name].status = 'running';
+  const card = document.getElementById(eid(name)); if (!card) return;
+  card.className = 'ac running';
+  setB(name, 'ab-run', '···');
+}
+
+function acctDone(name, recent, total) {
+  if (!acctMap[name]) return;
+  acctMap[name] = { status:'done', recent, total };
+  const card = document.getElementById(eid(name)); if (!card) return;
+  card.className = 'ac done';
+  document.getElementById(eid(name)+'_n').textContent = recent;
+  if (recent === 0) setB(name,'ab-zero','0篇');
+  else setB(name,'ab-ok','✓ '+total+'条');
+  doneCnt++;
+  const pct = Math.round(doneCnt/totalCnt*65);
+  setProgress(pct, '爬取中… ' + doneCnt + '/' + totalCnt);
+  setStepSub(0, doneCnt+'/'+totalCnt);
+}
+
+function setB(name, cls, txt) {
+  const b = document.getElementById(eid(name)+'_b'); if (!b) return;
+  b.className = 'abadge ' + cls; b.textContent = txt;
+}
+
+// ─── Steps ────────────────────────────────────────────────────────────────────
+function setStep(n) {
+  for (let i=0;i<3;i++){
+    const dot=document.getElementById('sd'+i), lbl=document.getElementById('sl'+i);
+    if (i<n){ dot.className='sdot done'; dot.textContent='✓'; lbl.className='slbl done'; }
+    else if(i===n){ dot.className='sdot active'; dot.textContent=''+(n+1); lbl.className='slbl active'; }
+    else { dot.className='sdot'; dot.textContent=''+(i+1); lbl.className='slbl'; }
+    if (i<2) document.getElementById('sln'+i).className='sline'+(i<n?' done':'');
+  }
+}
+function setStepSub(i, txt) {
+  const el = document.getElementById('ss'+i); if (el) el.textContent = txt;
+}
+
+// ─── Progress bar ─────────────────────────────────────────────────────────────
+function setProgress(pct, txt) {
+  document.getElementById('pbar-fill').style.width = pct+'%';
+  document.getElementById('pbar-pct').textContent = pct+'%';
+  if (txt) document.getElementById('pbar-txt').textContent = txt;
+}
+
+// ─── Parse log lines ──────────────────────────────────────────────────────────
+function parseLine(line) {
+  // 账号开始: "  [机器之心] '...' ..."
+  const mS = line.match(/\[(.+?)\]\s+'.*?'\s+\.\.\./);
+  if (mS) { curAcct = mS[1].trim(); acctRunning(curAcct); return; }
+
+  // 账号完成: "共 30 条 → 近7天 22 条"
+  const mD = line.match(/共\s*(\d+)\s*条\s*→\s*近\d+天\s*(\d+)\s*条/);
+  if (mD && curAcct) { acctDone(curAcct, parseInt(mD[2]), parseInt(mD[1])); curAcct = null; return; }
+
+  // Step 2: AI摘要
+  if (line.includes('AI 聚合摘要中')) {
+    setStep(1); setProgress(70, 'AI 聚合摘要中...');
+    setStepSub(1, '生成中...');
+    return;
+  }
+  if (line.includes('摘要中... ✓') || line.match(/摘要.*✓/)) {
+    setStepSub(1, '完成 ✓');
+  }
+
+  // Step 3: 写出
+  if (line.includes('写入飞书') || line.includes('写入本地') || line.includes('输出目标')) {
+    setStep(2); setProgress(85, '写出结果...');
+    return;
+  }
+
+  // 飞书完成
+  if (line.includes('飞书文档:') || line.includes('feishu.cn')) {
+    setProgress(92, '飞书写入完成');
+    document.getElementById('si-fs').style.display = '';
+    const m = line.match(/https:\/\/feishu\.cn\/docx\/\S+/);
+    if (m) {
+      const rl = document.getElementById('reslink');
+      rl.style.display = 'block';
+      rl.innerHTML = '📄 飞书文档：<a href="'+m[0]+'" target="_blank">'+m[0]+'</a>';
+    }
+  }
+
+  // 本地完成
+  if (line.match(/Markdown:|output\//)) {
+    document.getElementById('si-lc').style.display = '';
+  }
+
+  // 全部完成: "合计: 91 篇"
+  const mT = line.match(/合计[：:]\s*(\d+)\s*篇/);
+  if (mT) {
+    const tot = parseInt(mT[1]);
+    setStep(3); // all done
+    setProgress(100, '全部完成！共 '+tot+' 篇');
+    document.getElementById('pbar-fill').classList.remove('shimmer');
+    document.getElementById('sv-tot').textContent = tot;
+    document.getElementById('sv-acc').textContent = doneCnt;
+    document.getElementById('sumrow').style.display = 'flex';
+    setStepSub(2,'完成 ✓');
   }
 }
 
-// ─── 运行爬取 ────────────────────────────────────────────────────────────────
-let evtSource = null;
-
-function classifyLine(line) {
-  if (!line.trim()) return 'log-line';
-  if (/✅|完成|done|成功/.test(line)) return 'log-line log-done';
-  if (/▶/.test(line)) return 'log-line log-group';
-  if (/={3,}|─{3,}/.test(line)) return 'log-line log-head';
-  if (/⚠|warning|失败|error/i.test(line)) return 'log-line log-warn';
-  if (/✓/.test(line)) return 'log-line log-ok';
-  return 'log-line';
+// ─── Log panel ────────────────────────────────────────────────────────────────
+function toggleLog() {
+  logOpen = !logOpen;
+  document.getElementById('logpanel').style.display = logOpen ? 'block' : 'none';
+  const arr = document.getElementById('larr');
+  arr.className = 'larr' + (logOpen ? ' open' : '');
 }
 
-function appendLog(text) {
-  const panel = document.getElementById('log-panel');
-  // 清除空提示
-  const hint = panel.querySelector('.empty-hint');
-  if (hint) hint.remove();
-
-  const div = document.createElement('div');
-  div.className = classifyLine(text);
-  div.textContent = text;
-  panel.appendChild(div);
-  panel.scrollTop = panel.scrollHeight;
+function appendLog(line) {
+  const p = document.getElementById('logpanel');
+  const cls = /✅|完成|done/i.test(line) ? 'ldone'
+    : /▶/.test(line) ? 'lgrp'
+    : /✓/.test(line) ? 'lok'
+    : /⚠|warn|失败/i.test(line) ? 'lwarn'
+    : /={3,}/.test(line) ? 'lhead'
+    : '';
+  const d = document.createElement('div');
+  if (cls) d.className = cls;
+  d.textContent = line;
+  p.appendChild(d);
+  p.scrollTop = p.scrollHeight;
 }
 
-function setStatus(s) {
-  const pill = document.getElementById('status-pill');
-  const labels = { idle: '待运行', running: '运行中...', done: '完成', error: '出错' };
-  pill.className = 'pill ' + s;
-  pill.innerHTML = `<span class="dot"></span> ${labels[s]||s}`;
-}
+// ─── Run ──────────────────────────────────────────────────────────────────────
+let evtSrc = null;
 
 async function runCrawl() {
-  // 先保存
   await saveConfig();
-
-  const output  = document.getElementById('run_output').value;
-  const noAi    = document.getElementById('run_no_ai').checked;
-  const dryRun  = document.getElementById('run_dry_run').checked;
-  const days    = document.getElementById('search_days').value;
-
-  const panel = document.getElementById('log-panel');
-  panel.innerHTML = '';
-  document.getElementById('result-link').style.display = 'none';
-  setStatus('running');
+  buildGrid();
+  setStep(0); setProgress(0,'准备中...');
+  document.getElementById('progress').className = 'on';
+  document.getElementById('sumrow').style.display = 'none';
+  document.getElementById('reslink').style.display = 'none';
+  document.getElementById('si-fs').style.display = 'none';
+  document.getElementById('si-lc').style.display = 'none';
+  document.getElementById('logpanel').innerHTML = '';
   document.getElementById('run-btn').disabled = true;
 
+  const output = document.getElementById('run_output').value;
+  const noAi   = document.getElementById('run_no_ai').checked;
+  const dryRun = document.getElementById('run_dry_run').checked;
+  const days   = document.getElementById('search_days').value;
+
   try {
-    const r = await fetch(API + '/api/run', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ output, no_ai: noAi, dry_run: dryRun, days }),
-    });
+    const r = await fetch(API+'/api/run',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({output,no_ai:noAi,dry_run:dryRun,days})});
     const res = await r.json();
-    if (!res.ok) {
-      if (res.reason === 'already running') {
-        showToast('已有任务在运行中', 'err');
-        setStatus('running');
-        connectStream(); // 仍然订阅
-        return;
-      }
-      throw new Error(res.error || '启动失败');
-    }
+    if (!res.ok && res.reason !== 'already running') throw new Error(res.error||'启动失败');
     connectStream();
   } catch(e) {
-    appendLog('❌ 启动失败: ' + e.message);
-    setStatus('error');
+    appendLog('启动失败: '+e.message);
     document.getElementById('run-btn').disabled = false;
   }
 }
 
 function connectStream() {
-  if (evtSource) evtSource.close();
-  evtSource = new EventSource(API + '/api/stream');
-  evtSource.onmessage = function(e) {
+  if (evtSrc) evtSrc.close();
+  evtSrc = new EventSource(API+'/api/stream');
+  evtSrc.onmessage = function(e) {
     const item = JSON.parse(e.data);
     if (item.type === 'ping') return;
     if (item.type === 'log') {
+      parseLine(item.text);
       appendLog(item.text);
-      // 检测飞书链接
-      const m = item.text.match(/https:\/\/feishu\.cn\/docx\/\S+/);
-      if (m) {
-        const linkDiv = document.getElementById('result-link');
-        linkDiv.style.display = 'block';
-        linkDiv.innerHTML = `📄 飞书文档已创建：<a href="${m[0]}" target="_blank">${m[0]}</a>`;
-      }
     } else if (item.type === 'status') {
-      setStatus(item.status === 'done' ? 'done' : 'error');
       document.getElementById('run-btn').disabled = false;
-      evtSource.close();
+      if (item.status !== 'done') setProgress(100,'运行出错');
+      evtSrc.close();
     }
   };
-  evtSource.onerror = function() {
-    evtSource.close();
-    setStatus('idle');
+  evtSrc.onerror = function() {
+    evtSrc.close();
     document.getElementById('run-btn').disabled = false;
   };
 }
 
-// ─── Toast ───────────────────────────────────────────────────────────────────
-let toastTimer = null;
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = type; }, 2500);
+// ─── Config ───────────────────────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    const r = await fetch(API+'/api/config');
+    const cfg = await r.json();
+    const ids = ['accounts','search_query_template','invest_accounts','invest_query_template',
+                 'extra_accounts','extra_query_template','openrouter_api_key','local_output_dir',
+                 'feishu_app_id','feishu_app_secret','feishu_share_openid','search_days','search_num'];
+    ids.forEach(id => { const el=document.getElementById(id); if(el&&cfg[id]!==undefined) el.value=cfg[id]; });
+    const sel = document.getElementById('openrouter_model');
+    const mv = cfg.openrouter_model||'';
+    const found = [...sel.options].some(o=>o.value===mv);
+    if (found) sel.value = mv;
+    else if (mv) { sel.value='custom'; const c=document.getElementById('openrouter_model_custom'); c.style.display='block'; c.value=mv; }
+  } catch(e) { console.error(e); }
 }
 
-// ─── 工具 ────────────────────────────────────────────────────────────────────
-function toggleEye(id, btn) {
-  const el = document.getElementById(id);
-  if (el.type === 'password') { el.type = 'text'; btn.textContent = '🙈'; }
-  else { el.type = 'password'; btn.textContent = '👁'; }
+document.getElementById('openrouter_model').addEventListener('change',function(){
+  document.getElementById('openrouter_model_custom').style.display = this.value==='custom'?'block':'none';
+});
+
+function getModel(){
+  const s=document.getElementById('openrouter_model');
+  return s.value==='custom'?document.getElementById('openrouter_model_custom').value.trim():s.value;
 }
 
-// 初始化
+async function saveConfig() {
+  const ids=['accounts','search_query_template','invest_accounts','invest_query_template',
+             'extra_accounts','extra_query_template','openrouter_api_key','local_output_dir',
+             'feishu_app_id','feishu_app_secret','feishu_share_openid','search_days','search_num'];
+  const data={openrouter_model:getModel()};
+  ids.forEach(id=>{ const el=document.getElementById(id); if(el) data[id]=el.value.trim(); });
+  try {
+    const r = await fetch(API+'/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const res = await r.json();
+    if (res.ok) showToast('✓ 配置已保存','ok');
+    else showToast('保存失败','err');
+  } catch(e){ showToast('保存失败','err'); }
+}
+
+function toggleEye(id,btn) {
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.textContent=el.type==='password'?'👁':'🙈';
+}
+
+let toastT;
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+type;
+  clearTimeout(toastT); toastT=setTimeout(()=>t.className=type,2500);
+}
+
 loadConfig();
 </script>
 </body>
