@@ -5,3 +5,11 @@ __pycache__/
 *.json.tmp
 /tmp/
 node_modules/
+
+# PyInstaller 构建产物
+build/wechat-digest/
+dist/
+*.spec.bak
+build/node.exe
+__pycache__/
+*.pyc
