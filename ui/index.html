@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 公众号周报</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --purple: #bc8cff;
+    --radius: 8px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* Header */
+  .header { margin-bottom: 28px; }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header h1 .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: var(--bg3);
+    color: var(--muted);
+    font-weight: 400;
+    border: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .header p { color: var(--muted); margin-top: 6px; font-size: 13px; }
+
+  /* Cards */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Form elements */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  label span.hint {
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 6px;
+    font-size: 12px;
+  }
+  input[type=text], input[type=password], input[type=number], select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    padding: 8px 12px;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color .15s;
+  }
+  input[type=text]:focus, input[type=password]:focus,
+  input[type=number]:focus, select:focus {
+    border-color: var(--accent);
+  }
+  input[type=number] { width: 100px; }
+  .mono { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; }
+
+  /* Group block */
+  .group-block {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .group-block:last-child { margin-bottom: 0; }
+  .group-label {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .group-label .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* Row layout */
+  .row { display: flex; gap: 12px; }
+  .row .field { flex: 1; }
+  .row .field.narrow { flex: 0 0 120px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text);
+    transition: all .15s;
+    font-family: var(--font);
+  }
+  .btn:hover { background: #2d333b; border-color: #8b949e; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0d1117;
+    font-weight: 600;
+  }
+  .btn.primary:hover { background: #79c0ff; border-color: #79c0ff; }
+  .btn.success {
+    background: var(--green);
+    border-color: var(--green);
+    color: #0d1117;
+    font-weight: 600;
+  }
+  .btn.danger { color: var(--red); border-color: var(--red); }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  /* Status pill */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .pill.idle    { background: #21262d; color: var(--muted); }
+  .pill.running { background: #1f2d3d; color: var(--accent); }
+  .pill.done    { background: #122320; color: var(--green); }
+  .pill.error   { background: #2d1117; color: var(--red); }
+  .pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .pill.running .dot { animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .2; } }
+
+  /* Log panel */
+  #log-panel {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    height: 280px;
+    overflow-y: auto;
+    color: #c9d1d9;
+    margin-top: 12px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  #log-panel .log-line { margin: 1px 0; }
+  #log-panel .log-ok    { color: var(--green); }
+  #log-panel .log-warn  { color: var(--yellow); }
+  #log-panel .log-err   { color: var(--red); }
+  #log-panel .log-head  { color: var(--accent); font-weight: bold; }
+  #log-panel .log-group { color: var(--purple); }
+  #log-panel .log-done  { color: var(--green); font-weight: bold; }
+  #log-panel .empty-hint {
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    margin-top: 100px;
+  }
+
+  /* Save toast */
+  #toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .2s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #toast.ok  { background: #122320; color: var(--green); border: 1px solid var(--green); }
+  #toast.err { background: #2d1117; color: var(--red);   border: 1px solid var(--red); }
+
+  /* Eye toggle for password */
+  .input-wrap { position: relative; }
+  .input-wrap input { padding-right: 36px; }
+  .eye-btn {
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 15px; padding: 0;
+    line-height: 1;
+  }
+  .eye-btn:hover { color: var(--text); }
+
+  /* Run options */
+  .run-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .run-options label { margin: 0; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .run-options input[type=checkbox] { width: auto; accent-color: var(--accent); }
+  .run-options select { width: auto; }
+  .sep { color: var(--border); }
+
+  /* Result link */
+  #result-link {
+    margin-top: 10px;
+    font-size: 13px;
+    display: none;
+  }
+  #result-link a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  #result-link a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🗞 AI 公众号周报 <span class="badge">wechat-feishu-digest</span></h1>
+    <p>配置关键词 · 设置 API Key · 一键运行 · 输出到飞书或本地</p>
+  </div>
+
+  <!-- 账号配置 -->
+  <div class="card">
+    <div class="card-title">📰 账号 & 关键词</div>
+
+    <div class="group-block">
+      <div class="group-label"><span class="dot"></span> 科技媒体</div>
+      <div class="field">
+        <label>账号列表 <span class="hint">逗号分隔</span></label>
+        <input id="accounts" type="text" class="mono"
+               placeholder="机器之心,新智元,量子位">
+      </div>
+      <div class="field">
+        <label>搜索词模板 <span class="hint">{account} {year} {month} 会自动替换</span></label>
+        <input id="search_query_template" type="text" class="mono"
+               placeholder="{account} AI 大模型 {year}年{month}月">
+      </div>
+    </div>
+
+    <div class="group-block">
+      <div class="group-label" style="color: var(--yellow)"><span class="dot"></span> 投资资讯</div>
+      <div class="field">
+        <label>账号列表 <span class="hint">逗号分隔</span></label>
+        <input id="invest_accounts" type="text" class="mono"
+               placeholder="36氪,钛媒体,晚点,硅星人">
+      </div>
+      <div class="field">
+        <label>搜索词模板</label>
+        <input id="invest_query_template" type="text" class="mono"
+               placeholder="{account} AI 融资 大模型 {year}年{month}月">
+      </div>
+    </div>
+
+    <div class="group-block">
+      <div class="group-label" style="color: var(--purple)"><span class="dot"></span> 自定义（可选）</div>
+      <div class="field">
+        <label>账号列表 <span class="hint">留空则跳过</span></label>
+        <input id="extra_accounts" type="text" class="mono" placeholder="">
+      </div>
+      <div class="field">
+        <label>搜索词模板</label>
+        <input id="extra_query_template" type="text" class="mono" placeholder="">
+      </div>
+    </div>
+  </div>
+
+  <!-- AI & 输出配置 -->
+  <div class="card">
+    <div class="card-title">⚙️ API & 输出配置</div>
+
+    <div class="row">
+      <div class="field">
+        <label>🤖 OpenRouter API Key</label>
+        <div class="input-wrap">
+          <input id="openrouter_api_key" type="password" class="mono"
+                 placeholder="sk-or-v1-...">
+          <button class="eye-btn" onclick="toggleEye('openrouter_api_key', this)">👁</button>
+        </div>
+      </div>
+      <div class="field" style="flex: 0 0 280px">
+        <label>模型 <span class="hint">免费额度推荐</span></label>
+        <select id="openrouter_model">
+          <option value="stepfun/step-3.5-flash:free">stepfun/step-3.5-flash:free ⭐</option>
+          <option value="google/gemini-2.0-flash-lite:free">gemini-2.0-flash-lite:free</option>
+          <option value="google/gemini-2.5-flash:free">gemini-2.5-flash:free</option>
+          <option value="qwen/qwen3.5-flash-02-23">qwen/qwen3.5-flash-02-23</option>
+          <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
+          <option value="custom">自定义...</option>
+        </select>
+        <input id="openrouter_model_custom" type="text" class="mono"
+               style="margin-top:6px; display:none"
+               placeholder="输入模型 ID">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 14px">
+      <div class="field">
+        <label>📁 本地输出目录</label>
+        <input id="local_output_dir" type="text" class="mono"
+               placeholder="./output">
+      </div>
+      <div class="field narrow">
+        <label>爬取天数</label>
+        <input id="search_days" type="number" min="1" max="30" value="7">
+      </div>
+      <div class="field narrow">
+        <label>每组条数</label>
+        <input id="search_num" type="number" min="5" max="50" value="30">
+      </div>
+    </div>
+
+    <!-- 飞书（可折叠） -->
+    <details style="margin-top: 14px">
+      <summary style="font-size:13px; color: var(--muted); cursor:pointer; user-select:none">
+        🪶 飞书配置（选填）
+      </summary>
+      <div style="margin-top: 12px">
+        <div class="row">
+          <div class="field">
+            <label>App ID</label>
+            <input id="feishu_app_id" type="text" class="mono" placeholder="cli_xxx">
+          </div>
+          <div class="field">
+            <label>App Secret</label>
+            <div class="input-wrap">
+              <input id="feishu_app_secret" type="password" class="mono" placeholder="">
+              <button class="eye-btn" onclick="toggleEye('feishu_app_secret', this)">👁</button>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-top: 10px">
+          <label>共享给（Open ID，可选）</label>
+          <input id="feishu_share_openid" type="text" class="mono" placeholder="ou_xxx">
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 运行面板 -->
+  <div class="card">
+    <div class="card-title">▶ 运行</div>
+
+    <div class="run-options">
+      <span>输出到：</span>
+      <select id="run_output" style="width: auto">
+        <option value="auto">自动（根据配置）</option>
+        <option value="local">仅本地</option>
+        <option value="feishu">仅飞书</option>
+        <option value="both">飞书 + 本地</option>
+      </select>
+      <span class="sep">|</span>
+      <label><input type="checkbox" id="run_no_ai"> 跳过 AI 摘要</label>
+      <label><input type="checkbox" id="run_dry_run"> 预览模式（不写出）</label>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="saveConfig()">💾 保存配置</button>
+      <button class="btn primary" id="run-btn" onclick="runCrawl()">▶ 一键运行</button>
+      <span id="status-pill" class="pill idle">
+        <span class="dot"></span> 待运行
+      </span>
+    </div>
+
+    <div id="log-panel"><div class="empty-hint">运行后日志显示在这里...</div></div>
+    <div id="result-link"></div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+const API = '';
+
+// ─── 加载配置 ────────────────────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    const r = await fetch(API + '/api/config');
+    const cfg = await r.json();
+    const ids = ['accounts','search_query_template','invest_accounts',
+                 'invest_query_template','extra_accounts','extra_query_template',
+                 'openrouter_api_key','local_output_dir','feishu_app_id',
+                 'feishu_app_secret','feishu_share_openid','search_days','search_num'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && cfg[id] !== undefined) el.value = cfg[id];
+    });
+    // 模型选择
+    const modelSel = document.getElementById('openrouter_model');
+    const modelVal = cfg.openrouter_model || '';
+    const found = [...modelSel.options].some(o => o.value === modelVal);
+    if (found) {
+      modelSel.value = modelVal;
+    } else if (modelVal) {
+      modelSel.value = 'custom';
+      const customEl = document.getElementById('openrouter_model_custom');
+      customEl.style.display = 'block';
+      customEl.value = modelVal;
+    }
+  } catch(e) {
+    console.error('加载配置失败', e);
+  }
+}
+
+document.getElementById('openrouter_model').addEventListener('change', function() {
+  const custom = document.getElementById('openrouter_model_custom');
+  custom.style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+function getModelValue() {
+  const sel = document.getElementById('openrouter_model');
+  if (sel.value === 'custom') {
+    return document.getElementById('openrouter_model_custom').value.trim();
+  }
+  return sel.value;
+}
+
+// ─── 保存配置 ────────────────────────────────────────────────────────────────
+async function saveConfig() {
+  const ids = ['accounts','search_query_template','invest_accounts',
+               'invest_query_template','extra_accounts','extra_query_template',
+               'openrouter_api_key','local_output_dir','feishu_app_id',
+               'feishu_app_secret','feishu_share_openid','search_days','search_num'];
+  const data = {};
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value.trim();
+  });
+  data['openrouter_model'] = getModelValue();
+
+  try {
+    const r = await fetch(API + '/api/config', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const res = await r.json();
+    if (res.ok) showToast('✓ 配置已保存', 'ok');
+    else showToast('保存失败: ' + (res.error||''), 'err');
+  } catch(e) {
+    showToast('保存失败: ' + e.message, 'err');
+  }
+}
+
+// ─── 运行爬取 ────────────────────────────────────────────────────────────────
+let evtSource = null;
+
+function classifyLine(line) {
+  if (!line.trim()) return 'log-line';
+  if (/✅|完成|done|成功/.test(line)) return 'log-line log-done';
+  if (/▶/.test(line)) return 'log-line log-group';
+  if (/={3,}|─{3,}/.test(line)) return 'log-line log-head';
+  if (/⚠|warning|失败|error/i.test(line)) return 'log-line log-warn';
+  if (/✓/.test(line)) return 'log-line log-ok';
+  return 'log-line';
+}
+
+function appendLog(text) {
+  const panel = document.getElementById('log-panel');
+  // 清除空提示
+  const hint = panel.querySelector('.empty-hint');
+  if (hint) hint.remove();
+
+  const div = document.createElement('div');
+  div.className = classifyLine(text);
+  div.textContent = text;
+  panel.appendChild(div);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function setStatus(s) {
+  const pill = document.getElementById('status-pill');
+  const labels = { idle: '待运行', running: '运行中...', done: '完成', error: '出错' };
+  pill.className = 'pill ' + s;
+  pill.innerHTML = `<span class="dot"></span> ${labels[s]||s}`;
+}
+
+async function runCrawl() {
+  // 先保存
+  await saveConfig();
+
+  const output  = document.getElementById('run_output').value;
+  const noAi    = document.getElementById('run_no_ai').checked;
+  const dryRun  = document.getElementById('run_dry_run').checked;
+  const days    = document.getElementById('search_days').value;
+
+  const panel = document.getElementById('log-panel');
+  panel.innerHTML = '';
+  document.getElementById('result-link').style.display = 'none';
+  setStatus('running');
+  document.getElementById('run-btn').disabled = true;
+
+  try {
+    const r = await fetch(API + '/api/run', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ output, no_ai: noAi, dry_run: dryRun, days }),
+    });
+    const res = await r.json();
+    if (!res.ok) {
+      if (res.reason === 'already running') {
+        showToast('已有任务在运行中', 'err');
+        setStatus('running');
+        connectStream(); // 仍然订阅
+        return;
+      }
+      throw new Error(res.error || '启动失败');
+    }
+    connectStream();
+  } catch(e) {
+    appendLog('❌ 启动失败: ' + e.message);
+    setStatus('error');
+    document.getElementById('run-btn').disabled = false;
+  }
+}
+
+function connectStream() {
+  if (evtSource) evtSource.close();
+  evtSource = new EventSource(API + '/api/stream');
+  evtSource.onmessage = function(e) {
+    const item = JSON.parse(e.data);
+    if (item.type === 'ping') return;
+    if (item.type === 'log') {
+      appendLog(item.text);
+      // 检测飞书链接
+      const m = item.text.match(/https:\/\/feishu\.cn\/docx\/\S+/);
+      if (m) {
+        const linkDiv = document.getElementById('result-link');
+        linkDiv.style.display = 'block';
+        linkDiv.innerHTML = `📄 飞书文档已创建：<a href="${m[0]}" target="_blank">${m[0]}</a>`;
+      }
+    } else if (item.type === 'status') {
+      setStatus(item.status === 'done' ? 'done' : 'error');
+      document.getElementById('run-btn').disabled = false;
+      evtSource.close();
+    }
+  };
+  evtSource.onerror = function() {
+    evtSource.close();
+    setStatus('idle');
+    document.getElementById('run-btn').disabled = false;
+  };
+}
+
+// ─── Toast ───────────────────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = type; }, 2500);
+}
+
+// ─── 工具 ────────────────────────────────────────────────────────────────────
+function toggleEye(id, btn) {
+  const el = document.getElementById(id);
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = '🙈'; }
+  else { el.type = 'password'; btn.textContent = '👁'; }
+}
+
+// 初始化
+loadConfig();
+</script>
+</body>
+</html>
