@@ -62,5 +62,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,             # 可换成 build/icon.ico
+    icon=str(ROOT / "build" / "icon.ico"),
 )
