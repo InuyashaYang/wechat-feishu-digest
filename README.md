@@ -2,8 +2,16 @@
 
 > **一键爬取微信公众号最新文章，AI 聚合摘要，输出到飞书文档或本地 Markdown**
 
+[![Build](https://github.com/InuyashaYang/wechat-feishu-digest/actions/workflows/build.yml/badge.svg)](https://github.com/InuyashaYang/wechat-feishu-digest/actions/workflows/build.yml)
+[![Download](https://img.shields.io/github/v/release/InuyashaYang/wechat-feishu-digest?label=下载最新版&color=brightgreen)](https://github.com/InuyashaYang/wechat-feishu-digest/releases/latest/download/wechat-digest.exe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
+
+## ⬇️ 一键下载（Windows .exe）
+
+**[📥 下载 wechat-digest.exe](https://github.com/InuyashaYang/wechat-feishu-digest/releases/latest/download/wechat-digest.exe)**  
+双击运行，浏览器自动打开配置界面，零依赖，无需安装 Python/Node.js。
+
 
 ## ✨ 功能特性
 
