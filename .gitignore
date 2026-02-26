@@ -1,0 +1,7 @@
+output/
+.env
+*.pyc
+__pycache__/
+*.json.tmp
+/tmp/
+node_modules/
