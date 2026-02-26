@@ -24,22 +24,20 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: build/requirements-build.txt
 
       - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: wechat_search/package-lock.json
 
       # ── 3. 安装依赖 ────────────────────────────────────────────────────────
       - name: Install Python deps
-        run: pip install pyinstaller pillow --quiet
+        run: pip install -r build/requirements-build.txt
 
       - name: Install Node deps (cheerio)
         working-directory: wechat_search
-        run: npm ci --prefer-offline 2>$null; if ($LASTEXITCODE -ne 0) { npm install cheerio }
-        shell: pwsh
+        run: npm install cheerio --no-audit --prefer-offline
 
       # ── 4. 生成图标 ────────────────────────────────────────────────────────
       - name: Generate icon
